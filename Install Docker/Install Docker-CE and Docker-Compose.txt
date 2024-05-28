@@ -1,0 +1,26 @@
+Install Docker-CE and Docker-Compose
+Installation via a Simple Script
+
+You can easily install Docker-CE, Docker-Compose, Portainer-CE, and NGinX Proxy manager by using this quick install script I created and maintain on Github.  Just use the command:
+
+wget https://raw.githubusercontent.com/rabakuku/Docker/main/install_docker.bash
+
+To download the script to your desired host.
+
+Change the permissions to make the script executable:
+
+chmod +x ./install_docker_nproxyman.sh
+
+and then run the script with the command:
+
+./install_docker_nproxyman.sh
+
+When run, the script will prompt you to select your host operating system, then will ask you which bits of software you want to install.
+
+Simply enter 'y' for each thing you want to install.
+
+At some point, you may be asked for your super user (sudo) password as well.
+
+Allow the script to complete installation.
+
+At this point, you might want to log out and back in, as this will allow you to use the docker and docker-compose commands without the need of sudo in front of them.
