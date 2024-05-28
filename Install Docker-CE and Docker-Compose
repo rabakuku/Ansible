@@ -3,7 +3,7 @@ Installation via a Simple Script
 
 You can easily install Docker-CE, Docker-Compose, Portainer-CE, and NGinX Proxy manager by using this quick install script I created and maintain on Github.  Just use the command:
 
-wget https://gitlab.com/bmcgonag/docker_installs/-/raw/main/install_docker_nproxyman.sh
+wget https://raw.githubusercontent.com/rabakuku/Docker/main/install_docker.bash
 
 To download the script to your desired host.
 
