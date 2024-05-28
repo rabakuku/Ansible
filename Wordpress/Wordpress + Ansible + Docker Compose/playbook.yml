@@ -1,0 +1,72 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: Install aptitude
+      apt:
+        name: aptitude
+        state: latest
+        update_cache: true
+        pkg:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - python3-pip
+          - virtualenv
+          - python3-setuptools
+        state: latest
+        update_cache: true
+
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu jammy stable
+        state: present
+
+    - name: Update apt and install docker-ce
+      apt:
+        name: docker-ce
+        state: latest
+        update_cache: true
+
+    - name: Install requests 2.31.0
+      ansible.builtin.pip:
+        name:
+          - requests==2.31.0
+
+
+    - name: Ignore PEP 668 because it's silly.
+      ansible.builtin.file:
+        path: /usr/lib/python3.11/EXTERNALLY-MANAGED
+        state: absent
+
+    - name: Install Docker Module for Python
+      pip:
+        name: docker
+
+    - name: Run command if /path/to/database does not exist (with 'cmd' parameter)
+      ansible.builtin.command:
+        cmd: 'curl --create-dirs -O --output-dir /tmp/wordpress https://raw.githubusercontent.com/rabakuku/Docker/main/docker-compose.yml'
+        creates: /path/to/database
+
+    - name: Create and start services
+      community.docker.docker_compose_v2:
+        project_src: /tmp/wordpress
+      register: output
+
+    - name: UFW - Allow http connections
+      community.general.ufw:
+        rule: allow
+        port: http
+        rule: allow
+        port: "8000"
+
+
+
+
