@@ -52,7 +52,7 @@
 
     - name: Run command if /path/to/database does not exist (with 'cmd' parameter)
       ansible.builtin.command:
-        cmd: 'curl --create-dirs -O --output-dir /tmp/wordpress https://raw.githubusercontent.com/rabakuku/Docker/main/docker-compose.yml'
+        cmd: 'curl --create-dirs -O --output-dir /tmp/wordpress https://raw.githubusercontent.com/rabakuku/Docker/main/Wordpress/Wordpress%20%2B%20Ansible%20%2B%20Docker%20Compose/docker-compose.yml'
         creates: /path/to/database
 
     - name: Create and start services
