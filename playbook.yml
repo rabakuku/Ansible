@@ -1,0 +1,74 @@
+---
+- hosts: all
+  become: true
+  vars:
+    the_host: "136.244.93.129"
+  tasks:
+    - name: Install aptitude
+      apt:
+        name: aptitude
+        state: latest
+        update_cache: true
+        pkg:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - python3-pip
+          - virtualenv
+          - python3-setuptools
+        state: latest
+        update_cache: true
+
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu jammy stable
+        state: present
+
+    - name: Update apt and install docker-ce
+      apt:
+        name: docker-ce
+        state: latest
+        update_cache: true
+
+    - name: Install requests 2.31.0
+      ansible.builtin.pip:
+        name:
+          - requests==2.31.0
+
+    - name: Ignore PEP 668 because it's silly.
+      ansible.builtin.file:
+        path: /usr/lib/python3.11/EXTERNALLY-MANAGED
+        state: absent
+
+    - name: Install Docker Module for Python
+      pip:
+        name: docker
+        name: docker-compose
+
+    - name: Download ollama, webui, and start it
+      ansible.builtin.command:
+        cmd: 'docker run -d -p 3000:8080 --gpus=all -v ollama:/root/.ollama -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:ollama'
+
+    - name: Pause for 30 seconds to build container
+      ansible.builtin.pause:
+        seconds: 30
+
+    - name: Download Llama3 
+      ansible.builtin.command:
+        cmd: 'docker exec open-webui ollama run llama3'
+
+    - name: UFW - Allow http port 3000 connections
+      community.general.ufw:
+        rule: allow
+        port: "3000"
+
+    - name: completed
+      ansible.builtin.debug:
+        msg: Go to http://{{ the_host }}:3000 to access your AI 
