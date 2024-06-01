@@ -1,4 +1,4 @@
-name: Ollama & openwebui
+name: ollama_openwebui
 services:
     open-webui:
         ports:
